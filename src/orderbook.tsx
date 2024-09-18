@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { useBinanceOrderBook } from "./useBinanceOrderBook";
 
-const MAX_ORDERS = 20;
+const MAX_ORDERS = 5;
 
 interface RawOrderBookEntry {
   price: number;
@@ -37,10 +37,8 @@ const OrderBook: React.FC = () => {
       }));
 
       if (isAsk) {
-        return ob
-          .sort((a, b) => a.price - b.price)
-          .slice(0, MAX_ORDERS)
-          .reverse();
+        return ob.sort((a, b) => a.price - b.price).slice(0, MAX_ORDERS);
+        // .reverse();
       }
       return ob.sort((a, b) => b.price - a.price).slice(0, MAX_ORDERS);
     };
@@ -57,17 +55,15 @@ const OrderBook: React.FC = () => {
 
       if (isAsk) {
         // For asks, we accumulate from the end (highest price to lowest)
-        return orders
-          .reverse()
-          .map((order, index, array) => {
-            cumulativeQuantity += order.quantity;
-            return {
-              ...order,
-              volumePercentage: (cumulativeQuantity / totalVolume) * 100,
-              cumulativeQuantity,
-            };
-          })
-          .reverse(); // Reverse back to maintain original order
+        return orders.reverse().map((order, index, array) => {
+          cumulativeQuantity += order.quantity;
+          return {
+            ...order,
+            volumePercentage: (cumulativeQuantity / totalVolume) * 100,
+            cumulativeQuantity,
+          };
+        });
+        // .reverse(); // Reverse back to maintain original order
       } else {
         // For bids, we accumulate from the start (highest price to lowest)
         return orders.map((order) => {
