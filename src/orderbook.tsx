@@ -37,7 +37,10 @@ const OrderBook: React.FC = () => {
       }));
 
       if (isAsk) {
-        return ob.sort((a, b) => a.price - b.price).slice(0, MAX_ORDERS);
+        return ob
+          .sort((a, b) => a.price - b.price)
+          .slice(0, MAX_ORDERS)
+          .reverse();
       }
       return ob.sort((a, b) => b.price - a.price).slice(0, MAX_ORDERS);
     };
@@ -145,8 +148,9 @@ const OrderBook: React.FC = () => {
         </select>
       </div>
       <div className="flex">
-        {renderOrderList(groupedOrderBook.asks, "Asks", true)}
-        {renderOrderList(groupedOrderBook.bids, "Bids", false)}
+        {renderOrderList(groupedOrderBook.asks, "卖盘", true)}
+
+        {renderOrderList(groupedOrderBook.bids, "买盘", false)}
       </div>
     </div>
   );
